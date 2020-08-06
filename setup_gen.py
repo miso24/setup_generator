@@ -43,13 +43,17 @@ def yes_no_prompt(message):
 
 def gen_default_config(path):
     config = configparser.ConfigParser()
-    config['Author']['author'] = ""
-    config['Author']['author_email'] = ""
-    config['GitHub']['github_url'] = ""
+    config['Author'] = {
+        'author': '',
+        'author_email': ''
+    }
+    config['GitHub'] = {
+        'github_url': ''
+    }
     with open(path, 'w') as f:
         config.write(f)
 
-def config_common_data(conf):
+def config_common_data(conf, config_path):
     author = input_prompt("author name: ")
     author_email = input_prompt("author email: ", validator=email_validator, validate_while_typing=True)
     conf['Author']['author'] = author
@@ -60,7 +64,7 @@ def config_common_data(conf):
         github_un = input_prompt("github user name: ")
         conf['GitHub']['github_url'] = f"https://github.com/{github_un}"
 
-    with open('./config.ini', 'w') as f:
+    with open(config_path, 'w') as f:
         conf.write(f)
     print("config updated!")
 
@@ -107,7 +111,8 @@ def show_usage():
     print("Usage: setup_gen [config]")
 
 if __name__ == "__main__":
-    config_path = os.path.dirname(os.path.abspath(__file__)) + "/config.ini"
+    config_path = os.path.dirname(os.path.realpath(__file__)) + "/config.ini"
+    print(config_path)
     if not os.path.exists(config_path):
         gen_default_config(config_path)
     # load config
@@ -119,6 +124,6 @@ if __name__ == "__main__":
         show_usage()
 
     if len(argv) == 2 and argv[1] in ["config", "conf"]:
-        config_common_data(conf)
+        config_common_data(conf, config_path)
     elif len(argv) == 1:
         gen_setup(conf)
