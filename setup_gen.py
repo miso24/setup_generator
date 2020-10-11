@@ -112,7 +112,6 @@ def show_usage():
 
 if __name__ == "__main__":
     config_path = os.path.dirname(os.path.realpath(__file__)) + "/config.ini"
-    print(config_path)
     if not os.path.exists(config_path):
         gen_default_config(config_path)
     # load config
